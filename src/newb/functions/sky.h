@@ -84,6 +84,7 @@ vec3 renderOverworldSky(vec3 horizonEdgeCol, vec3 horizonColor, vec3 zenithColor
 }
 
 // sunrise/sunset bloom
+#if SUNB == 1
 vec3 getSunBloom(float viewDirX, vec3 horizonEdgeCol, vec3 FOG_COLOR) {
   float factor = FOG_COLOR.r/length(FOG_COLOR);
   factor *= factor;
@@ -95,7 +96,21 @@ vec3 getSunBloom(float viewDirX, vec3 horizonEdgeCol, vec3 FOG_COLOR) {
 
   return NL_MORNING_SUN_COL*horizonEdgeCol*(sunBloom*factor*factor);
 }
+#elif SUNB == 2
+vec3 getSunBloom(float viewDirX, vec3 horizonEdgeCol, vec3 FOG_COLOR) {
+    float factor = FOG_COLOR.r / length(FOG_COLOR);
+    factor *= factor;
+    factor *= factor;
+    float spread = smoothstep(0.0, 1.0, abs(viewDirX));
+    float sunBloom = spread * spread;
+    sunBloom = 0.5 * spread + sunBloom * sunBloom * sunBloom * 1.5;
 
+    // Gradient calculation
+    vec3 redOrangeGradient = mix(vec3(1.0, 0.2, 0.2), vec3(1.0, 0.5, 0.1), sunBloom);
+
+    return redOrangeGradient * horizonEdgeCol * (sunBloom * factor * factor);
+}
+#endif
 
 vec3 renderEndSky(vec3 horizonCol, vec3 zenithCol, vec3 viewDir, float t) {
   t *= 0.1;
