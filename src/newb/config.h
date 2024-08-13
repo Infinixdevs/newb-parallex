@@ -30,7 +30,8 @@
 /* -------- CONFIG STARTS HERE ----------- */
 
 /* Color correction */
-#define NL_TONEMAP_TYPE 3   // 1:Exponential, 2:Reinhard, 3:Extended Reinhard, 4:ACES
+#define NL_TONEMAP_TYPE 3   // 1:Exponential, 2:Reinhard, 3:Extended Reinhard, 4:ACES, there's more check tone.ap.h
+
 #define NL_CONSTRAST 0.75   // 0.3 low ~ 2.0 high
 //#define NL_EXPOSURE 1.3   // [toggle] 0.5 dark ~ 3.0 bright
 //#define NL_SATURATION 1.4 // [toggle] 0.0 grayscale ~ 4.0 super saturated
