@@ -147,6 +147,11 @@
 
 #define SIZE 16855475.0 // Adjust size as needed
 
+
+/* SHADOW EXTRAS */
+#define NL_SHADOW_EXTRA 0.3 // less makes shadows more dark and more ligjt shadows
+
+
 /* Aurora settings */
 #define NL_AURORA 1.2           // [toggle] 0.4 dim ~ 4.0 very bright
 #define NL_AURORA_VELOCITY 0.03 // 0.0 static ~ 0.3 very fast
