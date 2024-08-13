@@ -38,8 +38,6 @@ vec4 renderCloudsSimple(vec3 pos, highp float t, float rain, vec3 zenithCol, vec
 
   return color;
 }
-#define STEPS 4
-#define SIZE 16855475.0 // Adjust size as needed
 #if TYPEN == 1
 
 // Hash function to generate pseudo-random values
