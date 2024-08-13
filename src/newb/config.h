@@ -134,6 +134,9 @@
 #define NL_CLOUD2_DENSITY 25.0       // 1.0 blurry ~ 100.0 sharp
 #define NL_CLOUD2_VELOCIY 0.8        // 0.0 static ~ 4.0 very fast
 //#define NL_CLOUD2_MULTILAYER       // [toggle] extra cloud layer
+#define TYPEN 1
+#define NL_CLOUDS_SHADOW_INTENSITY 0.93
+#define NL_CLOUDS_BRIGHTNESS 0.93
 
 /* Aurora settings */
 #define NL_AURORA 1.2           // [toggle] 0.4 dim ~ 4.0 very bright
