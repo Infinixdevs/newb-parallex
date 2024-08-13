@@ -44,7 +44,13 @@ vec3 getZenithCol(float rainFactor, vec3 FOG_COLOR, vec3 fs) {
 
 vec3 getHorizonCol(float rainFactor, vec3 FOG_COLOR, vec3 fs) {
   vec3 horizonCol = NL_NIGHT_HORIZON_COL*(1.0-FOG_COLOR.b); 
-  horizonCol += NL_DAWN_HORIZON_COL*(((0.7*fs.x*fs.x) + (0.3*fs.x) + fs.y)*1.9); 
+  #if DAWN_TYPE == 1
+horizonCol += NL_DAWN_HORIZON_COL*(((0.7*fs.x*fs.x) + (0.3*fs.x) + fs.y)*1.9); 
+#elif DAWN_TYPE == 2
+horizonCol += mix(NL_DAWN_HORIZON_COL1, NL_DAWN_HORIZON_COL2, ((0.7*fs.x*fs.x) + (0.3*fs.x) + fs.y)*1.9);
+#elif DAWN_TYPE == 3
+horizonCol += mix(mix(NL_DAWN_HORIZON_COL1, NL_DAWN_HORIZON_COL2, fs.x), mix(NL_DAWN_HORIZON_COL2, NL_DAWN_HORIZON_COL3, fs.y), ((0.7*fs.x*fs.x) + (0.3*fs.x) + fs.y)*1.9);
+#endif
   horizonCol = mix(horizonCol, 2.0*fs.x*NL_DAY_HORIZON_COL, fs.x*fs.x);
   horizonCol = mix(horizonCol, NL_RAIN_HORIZON_COL*fs.z*19.6, rainFactor);
 
