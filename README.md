@@ -1,9 +1,11 @@
-# Newb X Legacy
+# Newb Legends
 
-**Newb X Legacy** is a RenderDragon successor to the legacy GLSL shader, [Newb Shader](https://github.com/devendrn/newb-shader-mcbe). It is an enhanced vanilla shader that focuses on being lightweight and having soft aesthetics. It supports Minecraft Bedrock 1.21+ (Windows/Android/iOS).
+**Newb Legends** is set to be a shader made by LynxiumMC and Ale graphics to create a shader for RD full of Features and Customisation made by Ale and Kynxi8
+
+
 
 > [!WARNING]
-> This is an experimental repository, breaking changes are made often.
+> This is an experimental repository, breaking changes are made often.It is recommended to download full releases
 
 ![Screenshots](docs/screenshots.jpg "Newb X Legacy 15.47, MCBE 1.21.0")
 
@@ -11,9 +13,10 @@
 
 ## Downloads
 
-Nightly builds for Android (ESSL), Windows (DX), and iOS (Metal) can be found at the [Discord server](https://discord.gg/newb-community-844591537430069279).
+Downloads can be found found at  [Discord server](https://discord.gg/newb-community-844591537430069279).
+ and some external sources or here on releases
 
-You can also download from [v15-dev releases](https://github.com/devendrn/newb-x-mcbe/releases/tag/v15-dev)
+
 
 <br>
 
@@ -101,3 +104,4 @@ options:
 Clangd can be used to get code completion and error checks for source files inside include/newb. Fake bgfx header and clangd config are provided for the same.
 - **Neovim** (NvChad): Install clangd LSP from Mason.
 - **VSCode**: Install [vscode-clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd) extension.
+
