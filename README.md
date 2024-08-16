@@ -1,6 +1,6 @@
 # Newb Legends
 
-**Newb Legends** is set to be a shader made by LynxiumMC and Ale graphics to create a shader for RD full of Features and Customisation made by Ale and Kynxi8
+**Newb Legends** is set to be a shader made by LynxiumMC and Ale graphics to create a shader for RD full of Features and Customisation made by Ale and LynxiumMC
 
 
 
