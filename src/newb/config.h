@@ -63,8 +63,8 @@
 
 /* Fog */
 #define NL_FOG_TYPE 5            // 0:no fog, 1:vanilla, 2:smoother vanilla, 3: exponential, 4: hyperbolic,5: parabolic
-#define NL_MIST_DENSITY 0.18      // 0.0 no mist ~ 1.0 misty
-#define NL_RAIN_MIST_OPACITY 0.12 // [toggle] 0.04 very subtle ~ 0.5 thick rain mist blow
+#define NL_MIST_DENSITY 0.3      // 0.0 no mist ~ 1.0 misty
+#define NL_RAIN_MIST_OPACITY 1.0 // [toggle] 0.04 very subtle ~ 0.5 thick rain mist blow
 
 /* DAWN TYPES and SETTINGS with SUNBLOOM TYPES */
 #define DAWN_TYPE 2 // 1;normal 2; gradient simple 3; gradient complex
@@ -123,7 +123,7 @@
 #define NL_UNDERWATER_TINT vec3(0.9,1.0,0.9) // fog tint color when underwater
 
 /* Cloud type */
-#define NL_CLOUD_TYPE 2 // 0:vanilla, 1:soft, 2:rounded
+#define NL_CLOUD_TYPE 1// 0:vanilla, 1:soft, 2:rounded
 
 /* Vanilla cloud settings - make sure to remove clouds.png when using this */
 #define NL_CLOUD0_THICKNESS 2.1      // 0.5 slim ~ 8.0 fat
@@ -163,11 +163,11 @@
 #define AO 2// 1;Basic , 2; Advanced
 
 /*JAVA FEATURES*/
-//#define METALLIC //see fragment
+#define METALLIC //see fragment
 
 
 /* Aurora settings */
-//#define  ENABLE_SHOOTING //stars
+#define  ENABLE_SHOOTING //stars
 #define NL_AURORA 1.2           // [toggle] 0.4 dim ~ 4.0 very bright
 #define NL_AURORA_VELOCITY 0.03 // 0.0 static ~ 0.3 very fast
 #define NL_AURORA_SCALE 0.04    // 0.002 large ~ 0.4 tiny
