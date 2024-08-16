@@ -112,8 +112,14 @@
 #define NL_WATER_WAVE             // [toggle] wave effect
 #define NL_WATER_FOG_FADE         // [toggle] fog fade for water
 #define NL_WATER_CLOUD_REFLECTION // [toggle] simple clouds/aurora reflection
-#define NL_WATER_TINT vec3(0.52,0.9,0.45)
+#define NL_WATER_TINT vec3(0.016, 0.000, 0.078)
 //#define WATER_SUNRAY //incomplete
+
+/*Moonlight*/
+//#define MOONLIGHT
+#define NL_MOONLIGHT_INTENSITY 9.0
+#define NL_MOONLIGHT_COLOR vec3(0.059, 0.102, 0.302)
+
 
 /* Underwater */
 #define NL_UNDERWATER_BRIGHTNESS 0.8 // 0.0 dark ~ 3.0 bright
