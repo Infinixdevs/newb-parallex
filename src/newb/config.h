@@ -30,16 +30,16 @@
 /* -------- CONFIG STARTS HERE ----------- */
 
 /* Color correction */
-#define NL_TONEMAP_TYPE 3   // 1:Exponential, 2:Reinhard, 3:Extended Reinhard, 4:ACES, there's more check tone.ap.h
+#define NL_TONEMAP_TYPE 4   // 1:Exponential, 2:Reinhard, 3:Extended Reinhard, 4:ACES, there's more check tone.ap.h
 
-#define NL_CONSTRAST 0.75   // 0.3 low ~ 2.0 high
-//#define NL_EXPOSURE 1.3   // [toggle] 0.5 dark ~ 3.0 bright
+#define NL_CONSTRAST 0.832  // 0.3 low ~ 2.0 high
+#define NL_EXPOSURE 1.4  // [toggle] 0.5 dark ~ 3.0 bright
 //#define NL_SATURATION 1.4 // [toggle] 0.0 grayscale ~ 4.0 super saturated
 //#define NL_TINT vec3(1.0,0.75,0.5) // [toggle] color overlay
 
 /* Terrain lighting */
-#define NL_SUN_INTENSITY 2.95   // 0.5 weak ~ 5.0 bright
-#define NL_TORCH_INTENSITY 1.0  // 0.5 weak ~ 3.0 bright
+#define NL_SUN_INTENSITY 5.0   // 0.5 weak ~ 5.0 bright
+#define NL_TORCH_INTENSITY 1.0 // 0.5 weak ~ 3.0 bright
 #define NL_NIGHT_BRIGHTNESS 0.1 // 0.0 dark ~ 2.0 bright
 #define NL_CAVE_BRIGHTNESS  0.1 // 0.0 dark ~ 2.0 bright
 #define NL_SHADOW_INTENSITY 0.7 // 0.0 no shadow ~ 1.0 strong shadow
@@ -62,17 +62,19 @@
 #define NL_END_TORCH_COL        vec3(1.0,0.52,0.18)
 
 /* Fog */
-#define NL_FOG_TYPE 2             // 0:no fog, 1:vanilla, 2:smoother vanilla
+#define NL_FOG_TYPE 5            // 0:no fog, 1:vanilla, 2:smoother vanilla, 3: exponential, 4: hyperbolic,5: parabolic
 #define NL_MIST_DENSITY 0.18      // 0.0 no mist ~ 1.0 misty
 #define NL_RAIN_MIST_OPACITY 0.12 // [toggle] 0.04 very subtle ~ 0.5 thick rain mist blow
 
 /* DAWN TYPES and SETTINGS with SUNBLOOM TYPES */
-#define DAWN_TYPE 1 // 1;normal 2; gradient simple 3; gradient complex
+#define DAWN_TYPE 2 // 1;normal 2; gradient simple 3; gradient complex
 #define NL_DAWN_HORIZON_COL  vec3(0.9,0.3,0.3) // not used by type 2 and 3
-#define NL_DAWN_HORIZON_COL1 vec3(0.9,0.3,0.3)
-#define NL_DAWN_HORIZON_COL2 vec3(0.9,0.3,0.3)
-#define NL_DAWN_HORIZON_COL3 vec3(0.9,0.3,0.3)
-#define SUNB 1 // 1; default 2; Improve (not tested)
+#define NL_DAWN_HORIZON_COL1 vec3(0.9, 0.3, 0.3) // Deep red-orange
+#define NL_DAWN_HORIZON_COL2 vec3(0.92, 0.35, 0.35) // Dark orange
+#define NL_DAWN_HORIZON_COL3 vec3(0.95, 0.5, 0.4) // Warm orange
+#define NL_DAWN_HORIZON_COL4 vec3(0.98, 0.7, 0.6) // Light yellow-orange
+
+#define SUNB 2 // 1; default 2; Improve (not tested)
 
 
 /* Sky colors - zenith=top, horizon=bottom */
@@ -111,6 +113,7 @@
 #define NL_WATER_FOG_FADE         // [toggle] fog fade for water
 #define NL_WATER_CLOUD_REFLECTION // [toggle] simple clouds/aurora reflection
 #define NL_WATER_TINT vec3(0.52,0.9,0.45)
+//#define WATER_SUNRAY //incomplete
 
 /* Underwater */
 #define NL_UNDERWATER_BRIGHTNESS 0.8 // 0.0 dark ~ 3.0 bright
@@ -120,7 +123,7 @@
 #define NL_UNDERWATER_TINT vec3(0.9,1.0,0.9) // fog tint color when underwater
 
 /* Cloud type */
-#define NL_CLOUD_TYPE 1 // 0:vanilla, 1:soft, 2:rounded
+#define NL_CLOUD_TYPE 2 // 0:vanilla, 1:soft, 2:rounded
 
 /* Vanilla cloud settings - make sure to remove clouds.png when using this */
 #define NL_CLOUD0_THICKNESS 2.1      // 0.5 slim ~ 8.0 fat
@@ -142,12 +145,10 @@
 #define NL_CLOUD2_SHAPE 0.0         //Don't change for volumetric
 
 #define NL_CLOUD2_DENSITY 25.0       // 1.0 blurry ~ 100.0 sharp
-#define NL_CLOUD2_VELOCIY 0.8        // 0.0 static ~ 4.0 very fast
+#define NL_CLOUD2_VELOCIY 2.3        // 0.0 static ~ 4.0 very fast
 //#define NL_CLOUD2_MULTILAYER       // [toggle] extra cloud layer
 
 /*Volumetric Clouds*/
-
-
 #define TYPEN 1 // 2;3;4;5;6 - I've only tested type 1
 
 #define NL_CLOUDS_SHADOW_INTENSITY 0.93//useless for now
@@ -158,10 +159,15 @@
 
 
 /* SHADOW EXTRAS */
-#define NL_SHADOW_EXTRA 0.3 // less makes shadows more dark and more ligjt shadows
+#define NL_SHADOW_EXTRA 0.1 // less makes shadows more dark and more ligjt shadows
+#define AO 2// 1;Basic , 2; Advanced
+
+/*JAVA FEATURES*/
+//#define METALLIC //see fragment
 
 
 /* Aurora settings */
+//#define  ENABLE_SHOOTING //stars
 #define NL_AURORA 1.2           // [toggle] 0.4 dim ~ 4.0 very bright
 #define NL_AURORA_VELOCITY 0.03 // 0.0 static ~ 0.3 very fast
 #define NL_AURORA_SCALE 0.04    // 0.002 large ~ 0.4 tiny
@@ -177,7 +183,7 @@
 #define NL_SUNMOON_SIZE 1.0     // 0.3 tiny ~ 4.0 massive
 
 /* Fake godrays during sunrise/sunset */
-//#define NL_GODRAY 0.3 // [toggle] 0.1 subtle ~ 0.8 strong
+#define NL_GODRAY 0.8 // [toggle] 0.1 subtle ~ 0.8 strong
 
 /* Sky reflection */
 //#define NL_GROUND_REFL 0.4       // [toggle] 0.2 slightly reflective ~ 1.0 fully reflect sky 
