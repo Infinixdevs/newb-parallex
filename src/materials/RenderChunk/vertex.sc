@@ -2,7 +2,7 @@ $input a_color0, a_position, a_texcoord0, a_texcoord1
 #ifdef INSTANCING
   $input i_data0, i_data1, i_data2, i_data3
 #endif
-$output v_color0, v_color1, v_fog, v_refl, v_texcoord0, v_lightmapUV, v_extra
+$output v_color0, v_color1, v_fog, v_refl, v_texcoord0, v_lightmapUV, v_extra, v_wpos, relPos, fragPos, Time, waterFlag, fogControl, v_underwaterRainTime, v_color2, v_position, v_rainDrops
 
 #include <bgfx_shader.sh>
 #include <newb/main.sh>
@@ -18,9 +18,10 @@ void main() {
   #else
     mat4 model = u_model[0];
   #endif
-
+    vec3 worldPoss = mul(model, vec4(a_position, 1.0)).xyz;
   vec3 worldPos = mul(model, vec4(a_position, 1.0)).xyz;
-
+    relPos += vec3(0.5, 0.5, 0.5);
+        vec3 viewDr = normalize(relPos - ViewPositionAndTime.xyz);
   #ifdef RENDER_AS_BILLBOARDS
     worldPos += vec3(0.5,0.5,0.5);
 
@@ -126,6 +127,7 @@ void main() {
     fogColor.a = mix(fogColor.a, 1.0, NL_GODRAY*nlRenderGodRayIntensity(cPos, worldPos, t, uv1, relativeDist, FogColor.rgb));
   #endif
 
+fogControl = FogAndDistanceControl.xy;
   if (nether) {
     // blend fog with void color
     fogColor.rgb = colorCorrectionInv(FogColor.rgb);
@@ -136,6 +138,11 @@ void main() {
   vec4 pos;
 
   #if !defined(DEPTH_ONLY_OPAQUE) || defined(DEPTH_ONLY)
+  
+  fragPos = a_position;
+Time = ViewPositionAndTime.w; 
+
+waterFlag = 0.0;
     #ifdef TRANSPARENT
       if (a_color0.a < 0.95) {
         color.a += (0.5-0.5*color.a)*clamp((camDis/FogAndDistanceControl.w),0.0,1.0);
@@ -161,6 +168,7 @@ void main() {
       refl = nlRefl(
         color, fogColor, lit, uv1, tiledCpos, camDis, worldPos, viewDir, torchColor, horizonEdgeCol, horizonCol, zenithCol, FogColor.rgb, rainFactor, FogAndDistanceControl.z, t, pos.xyz, underWater, end, nether
       );
+      waterFlag = 1.0;
     #endif
 
     if (underWater) {
@@ -172,12 +180,34 @@ void main() {
   #endif
 
   color.rgb *= light;
+// Lens flare effect for terrain
+float flareIntensity = pow(max(dot(normalize(viewDir), normalize(worldPos)), 0.0), 2.0);
+v_color2 = vec4(a_texcoord1 + flareIntensity * vec2(0.1, 0.1), 0.0, 0.0);
 
+    v_position = a_position.xyz;
   #ifdef NL_GLOW_SHIMMER
     float shimmer = nlGlowShimmer(cPos, t);
   #else
     float shimmer = 0.0;
   #endif
+    v_underwaterRainTime.x = float(detectUnderwater(FogColor.rgb, FogAndDistanceControl.xy));
+    v_underwaterRainTime.y = detectRain(FogAndDistanceControl.xyz);
+    v_underwaterRainTime.z = ViewPositionAndTime.w;
+    
+    // Rain screen drops effect
+float rainDropIntensity = rainFactor * 0.5; // Adjust intensity as needed
+vec2 rainDropPosition = a_texcoord0.xy * 2.0 - 1.0; // Map to screen space
+
+// Simulate the movement of rain drops over time
+vec2 rainMovement = rainDropPosition + vec2(0.0, Time * 0.2);
+
+// Create a simple drop pattern using a sine function
+float dropEffect = max(0.0, sin(10.0 * rainMovement.x) * sin(10.0 * rainMovement.y));
+
+// Modulate the effect by rain intensity
+v_rainDrops = dropEffect * rainDropIntensity;
+
+
 
   v_extra = vec4(shade, worldPos.y, water, shimmer);
   v_refl = refl;
@@ -186,5 +216,6 @@ void main() {
   v_color0 = color;
   v_color1 = a_color0;
   v_fog = fogColor;
+           v_wpos = worldPoss;
   gl_Position = pos;
 }
