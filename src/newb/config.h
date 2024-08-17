@@ -62,12 +62,12 @@
 #define NL_END_TORCH_COL        vec3(1.0,0.52,0.18)
 
 /* Fog */
-#define NL_FOG_TYPE 5            // 0:no fog, 1:vanilla, 2:smoother vanilla, 3: exponential, 4: hyperbolic,5: parabolic
-#define NL_MIST_DENSITY 0.3      // 0.0 no mist ~ 1.0 misty
+#define NL_FOG_TYPE 2           // 0:no fog, 1:vanilla, 2:smoother vanilla, 3: exponential, 4: hyperbolic,5: parabolic
+#define NL_MIST_DENSITY 0.01      // 0.0 no mist ~ 1.0 misty
 #define NL_RAIN_MIST_OPACITY 1.0 // [toggle] 0.04 very subtle ~ 0.5 thick rain mist blow
 
 /* DAWN TYPES and SETTINGS with SUNBLOOM TYPES */
-#define DAWN_TYPE 2 // 1;normal 2; gradient simple 3; gradient complex
+#define DAWN_TYPE 1 // 1;normal 2; gradient simple 3; gradient complex
 #define NL_DAWN_HORIZON_COL  vec3(0.9,0.3,0.3) // not used by type 2 and 3
 #define NL_DAWN_HORIZON_COL1 vec3(0.9, 0.3, 0.3) // Deep red-orange
 #define NL_DAWN_HORIZON_COL2 vec3(0.92, 0.35, 0.35) // Dark orange
@@ -106,7 +106,7 @@
 //#define NL_EXTRA_PLANTS_WAVE // [toggle] !dont use! wave using texture coords (1.21.0 vanilla 2048x1024)
 
 /* Water */
-#define NL_WATER_TRANSPARENCY 0.9 // 0.0 transparent ~ 1.0 normal
+#define NL_WATER_TRANSPARENCY 1.0 // 0.0 transparent ~ 1.0 normal
 #define NL_WATER_BUMP 0.07        // 0.001 plain ~ 0.2 bumpy water
 #define NL_WATER_TEX_OPACITY 0.3  // 0.0 plain water ~ 1.0 vanilla water texture
 #define NL_WATER_WAVE             // [toggle] wave effect
@@ -165,9 +165,9 @@
 
 
 /* SHADOW EXTRAS */
-#define NL_SHADOW_EXTRA 0.1 // less makes shadows more dark and more ligjt shadows
+#define NL_SHADOW_EXTRA 0.4 // less makes shadows more dark and more ligjt shadows
 #define AO 2// 1;Basic , 2; Advanced
-
+#define AO_DARKENESS 0.2
 /*JAVA FEATURES*/
 #define METALLIC //see fragment
 

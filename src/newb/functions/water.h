@@ -22,9 +22,9 @@ vec4 nlWater(
 
   float cosR;
   float rippleFrequency1 = 0.9; // Frequency of first ripple wave
-  float rippleAmplitude1 = 0.2;  // Amplitude of first ripple wave
-  float rippleFrequency2 = 0.6; // Frequency of second ripple wave
-  float rippleAmplitude2 = 0.3;  // Amplitude of second ripple wave
+  float rippleAmplitude1 = 1.6;  // Amplitude of first ripple wave
+  float rippleFrequency2 = 0.8; // Frequency of second ripple wave
+  float rippleAmplitude2 = 4.0;  // Amplitude of second ripple wave
   float bumpBase = 0.15;         // Base bump value
   float bump = bumpBase + 0.05 * sin(t * 1.5); // Dynamic bump based on time
   vec3 waterRefl;
@@ -68,7 +68,7 @@ vec4 nlWater(
         float moonlightFactor = clamp(dot(viewDir, normalize(vec3(0.5, 0.5, 0.5))), 0.0, 1.0);
         waterRefl += NL_MOONLIGHT_COLOR * moonlightFactor * NL_MOONLIGHT_INTENSITY;
         #endif
-         
+         #ifdef SPECULAR
         //specular
     vec3 viewDirNorm = normalize(viewDir);
     vec3 reflDir = reflect(viewDirNorm, vec3(0, 1, 0));
@@ -78,7 +78,7 @@ vec4 nlWater(
     // Add specular highlight to water reflection
     waterRefl += specular * vec3(1.0, 1.0, 1.0);
     
-    
+    #endif
     // Torch light reflection
     waterRefl += torchColor * NL_TORCH_INTENSITY * (lit.x * lit.x + lit.x) * bump * 10.0;
 

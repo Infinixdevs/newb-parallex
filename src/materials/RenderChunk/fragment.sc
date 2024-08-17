@@ -17,23 +17,19 @@ int getBlockID(const vec4 texCol) {
 
     return iron ? 0 : gold ? 1 : copper ? 2 : other ? 3 : 4;
 }
-float computeAmbientOcclusion(vec3 normal, vec3 lightDir, vec3 viewDir, vec3 fragPos) {
+float computeAmbientOcclusion(vec3 normal, vec3 lightDir, vec3 viewDir, vec3 fragPos, float darkness) {
     // Use a combination of dot products to consider light direction and surface normals
     float occlusion = 0.0;
-
     float normalAO = max(dot(normal, lightDir), 0.0);
-    
     float viewAO = max(dot(normal, viewDir), 0.0);
-
     // Position-based occlusion using fragment position (consider depth)
     float posAO = clamp(length(fragPos) / 50.0, 0.0, 1.0);
-
     // Combine these effects
     occlusion = normalAO * 0.5 + viewAO * 0.3 + posAO * 0.2;
-
+    // Apply darkness factor
+    occlusion *= darkness;
     // Ensure smooth blending
     occlusion = pow(occlusion, 0.5);
-
     return occlusion;
 }
 
@@ -80,7 +76,7 @@ void main() {
     vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0));
 
     // Compute the enhanced ambient occlusion
-    float aoFactor = computeAmbientOcclusion(normal, lightDir, viewDir, fragPos);
+float aoFactor = computeAmbientOcclusion(normal, lightDir, viewDir, fragPos, AO_DARKNESS);
 
     // Apply ambient occlusion to the diffuse color
     diffuse.rgb *= aoFactor;
@@ -92,7 +88,7 @@ vec3 normal = fnormal;
 vec3 lightDir = normalize(lightPos);
 
 // Compute the enhanced ambient occlusion
-float aoFactor = computeAmbientOcclusion(normal, lightDir, viewDir, v_position);
+float aoFactor = computeAmbientOcclusion(normal, lightDir, viewDir, v_position, AO_DARKNESS);
 
 // Apply ambient occlusion to the diffuse color
 diffuse.rgb *= aoFactor;
