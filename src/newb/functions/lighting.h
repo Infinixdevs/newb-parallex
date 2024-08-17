@@ -100,11 +100,11 @@ if (shade > 0.8) {
   // darken at crevices
   float col_max = max(COLOR.r, max(COLOR.g, COLOR.b));
   if (col_max < 0.7) {
-      light *= 0.35;    //adjust this number (max 0.7)
+      light *= 0.4;    //adjust this number (max 0.7)
   }
   // brighten tree leaves
   if (isTree) {
-    light *= 1.45;
+    light *= 1.80;
   }
 
   return light;
