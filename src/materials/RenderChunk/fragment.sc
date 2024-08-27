@@ -29,7 +29,7 @@ float computeAmbientOcclusion(vec3 normal, vec3 lightDir, vec3 viewDir, vec3 fra
     // Apply darkness factor
     occlusion *= darkness;
     // Ensure smooth blending
-    occlusion = pow(occlusion, 0.5);
+    occlusion = pow(occlusion, 0.28);
     return occlusion;
 }
 
@@ -180,7 +180,7 @@ bool underWater = v_underwaterRainTime.x > 0.5;
     texCol.rgb = diffuse.rgb;
     diffuse.rgb *= color.rgb;
     diffuse.rgb += glow;
- vec3 stars += pow(vec3_splat(star(sPos.zx*250.0, v_underwaterRainTime.z))*1.0, vec3(16,7,5))*mask;
+ vec3 stars += pow(vec3_splat(star(sPos.zx*2.0, v_underwaterRainTime.z))*1.0, vec3(16,7,5))*mask;
  
 
     if (v_extra.b > 0.9) {
