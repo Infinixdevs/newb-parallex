@@ -1,4 +1,4 @@
-$input v_color0, v_color1, v_fog, v_refl, v_texcoord0, v_lightmapUV, v_extra, v_wpos, relPos, fragPos, Time, waterFlag, fogControl, v_underwaterRainTime, v_color2, v_position, v_rainDrops
+$input v_color0, v_color1, v_fog, v_refl, v_texcoord0, v_lightmapUV, v_extra, v_wpos, relPos, fragPos, Time, waterFlag, fogControl, v_underwaterRainTime, v_color2, v_position, v_rainDrops, sPos
 
 #include <bgfx_shader.sh>
 #include <newb/main.sh>
@@ -37,6 +37,29 @@ float computeAmbientOcclusion(vec3 normal, vec3 lightDir, vec3 viewDir, vec3 fra
 float fogTime(float fogColorG){
     return clamp(((349.305545 * fogColorG - 159.858192) * fogColorG + 30.557216) * fogColorG - 1.628452, -1.0, 1.0);
 }
+
+// Falling Stars code By i11212 : https://www.shadertoy.com/view/mdVXDm
+
+highp float hashS(
+        highp vec2 x){
+return fract(sin(dot(
+        x,vec2(11,57)))*4e3);
+        }
+
+highp float star(
+        highp vec2 x, float time){
+x = mul(x, mtxFromCols(vec2(cos(0.0), sin(0.0)), vec2(sin(0.0), -cos(0.5))));
+x.y += time*22.0;
+highp float shape = (0.9-length(
+        fract(x-vec2(0,0.5))-0.5));
+x *= vec2(1,0.1);
+highp vec2 fr = fract(x);
+highp float random = step(hashS(floor(x)),0.01),
+                        tall = (1.0-(abs(fr.x-0.5)+fr.y*0.5))*random;
+return clamp(clamp((shape-random)*step(hashS(
+        floor(x+vec2(0,0.05))),.01),0.0,1.0)+tall,0.0,1.0);
+        }
+        
 void main() {
     vec4 diffuse;
     vec4 color;
@@ -141,7 +164,7 @@ bool underWater = v_underwaterRainTime.x > 0.5;
     }
     
 
-    
+     float mask = (1.0-1.0*rainFactor)*max(1.0 - 3.0*max(v_fog.b, v_fog.g), 0.0);
     #ifdef TRANSPARENT
         if (v_extra.b > 0.9) {
             diffuse.rgb = vec3_splat(1.0 - NL_WATER_TEX_OPACITY * (1.0 - diffuse.b * 1.8));
@@ -150,20 +173,21 @@ bool underWater = v_underwaterRainTime.x > 0.5;
     #else
         diffuse.a = 1.0;
     #endif
-
+   bool underWater = v_underwaterRainTime.x > 0.5;
     float vanillaAO = 0.0;
-    #ifndef SEASONS
-        vanillaAO = 1.0 - (v_color0.g * 2.0 - (v_color0.r < v_color0.b ? v_color0.r : v_color0.b));
-    #endif
     //diffuse.rgb = v_rainDrops;
 
     texCol.rgb = diffuse.rgb;
     diffuse.rgb *= color.rgb;
     diffuse.rgb += glow;
-
+ vec3 stars += pow(vec3_splat(star(sPos.zx*250.0, v_underwaterRainTime.z))*1.0, vec3(16,7,5))*mask;
+ 
 
     if (v_extra.b > 0.9) {
         diffuse.rgb += v_refl.rgb * v_refl.a;
+        #ifdef STAR_REFL
+        diffuse.rgb += stars;
+        #endif
     } else if (v_refl.a > 0.0) {
         // Reflective effect - only on xz plane
         float dy = abs(dFdy(v_extra.g));

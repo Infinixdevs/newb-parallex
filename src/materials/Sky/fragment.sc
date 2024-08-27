@@ -10,7 +10,7 @@
   uniform vec4 ViewPositionAndTime;
   
 #endif
-#ifdef ENABLE_SHOOTING
+
 // Falling Stars code By i11212 : https://www.shadertoy.com/view/mdVXDm
 
 highp float hashS(
@@ -32,7 +32,7 @@ highp float random = step(hashS(floor(x)),0.01),
 return clamp(clamp((shape-random)*step(hashS(
         floor(x+vec2(0,0.05))),.01),0.0,1.0)+tall,0.0,1.0);
         }
-        #endif
+        
 void main() {
   #ifndef INSTANCING
     vec3 viewDir = normalize(v_worldPos);

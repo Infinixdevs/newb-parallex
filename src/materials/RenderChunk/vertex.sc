@@ -2,7 +2,7 @@ $input a_color0, a_position, a_texcoord0, a_texcoord1
 #ifdef INSTANCING
   $input i_data0, i_data1, i_data2, i_data3
 #endif
-$output v_color0, v_color1, v_fog, v_refl, v_texcoord0, v_lightmapUV, v_extra, v_wpos, relPos, fragPos, Time, waterFlag, fogControl, v_underwaterRainTime, v_color2, v_position, v_rainDrops
+$output v_color0, v_color1, v_fog, v_refl, v_texcoord0, v_lightmapUV, v_extra, v_wpos, relPos, fragPos, Time, waterFlag, fogControl, v_underwaterRainTime, v_color2, v_position, v_rainDrops, sPos
 
 #include <bgfx_shader.sh>
 #include <newb/main.sh>
@@ -207,7 +207,17 @@ float dropEffect = max(0.0, sin(10.0 * rainMovement.x) * sin(10.0 * rainMovement
 // Modulate the effect by rain intensity
 v_rainDrops = dropEffect * rainDropIntensity;
 
+vec3 newpos = a_position;
 
+    // make sky curved
+    newpos.y -= 0.4*a_color0.r*a_color0.r;
+  vec3 sposv = newpos.xyz;
+  sposv.y += 0.148;
+  
+    v_underwaterRainTime.x = float(detectUnderwater(FogColor.rgb, FogAndDistanceControl.xy));
+    v_underwaterRainTime.y = detectRain(FogAndDistanceControl.xyz);
+    v_underwaterRainTime.z = ViewPositionAndTime.w;
+    
 
   v_extra = vec4(shade, worldPos.y, water, shimmer);
   v_refl = refl;
@@ -216,6 +226,7 @@ v_rainDrops = dropEffect * rainDropIntensity;
   v_color0 = color;
   v_color1 = a_color0;
   v_fog = fogColor;
+  sPos = sposv;
            v_wpos = worldPoss;
   gl_Position = pos;
 }

@@ -28,3 +28,4 @@ float waterFlag : WATER_FLAG;
 vec2 fogControl : FOG_CONTROL;
 float v_rainDrops : RAIN_DROP;
 //vec3 v_rainDrops : TEXCOORD11;
+vec3 sPos                       : COLOR13;
