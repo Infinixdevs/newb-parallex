@@ -76,7 +76,7 @@ shadow = max(shadow, (1.0 - NL_SHADOW_INTENSITY + (1.0 * NL_SHADOW_INTENSITY * n
 
 // Adjust the shadow intensity based on the shade value
 if (shade > 0.8) {
-    shadow *= 1.0; // No change to shadow
+    shadow *= 0.7; // No change to shadow
 } else {
     shadow *= NL_SHADOW_EXTRA; // Makes the shadow darker (adjust this value as needed)
 }
@@ -100,11 +100,11 @@ if (shade > 0.8) {
   // darken at crevices
   float col_max = max(COLOR.r, max(COLOR.g, COLOR.b));
   if (col_max < 0.7) {
-      light *= 0.35;    //adjust this number (max 0.7)
+      light *= 0.39;    //adjust this number (max 0.7)
   }
   // brighten tree leaves
   if (isTree) {
-    light *= 1.45;
+    light *= 1.80;
   }
 
   return light;
