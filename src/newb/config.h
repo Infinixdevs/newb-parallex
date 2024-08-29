@@ -29,13 +29,13 @@
 
 /* Color correction */
 #define NL_TONEMAP_TYPE 3            // 1:Exponential, 2:Reinhard, 3:Extended Reinhard, 4:ACES
-#define NL_CONTRAST 0.75             // 0.3 low ~ 2.0 high
+#define NL_CONSTRAST 0.75             // 0.3 low ~ 2.0 high
 //#define NL_EXPOSURE 1.3            // [toggle] 0.5 dark ~ 3.0 bright
 //#define NL_SATURATION 1.4          // [toggle] 0.0 grayscale ~ 4.0 super saturated
 //#define NL_TINT vec3(1.0,0.75,0.5) // [toggle] color overlay
 
 /* Terrain lighting */
-#define NL_SUN_INTENSITY 2.95   // 0.5 weak ~ 5.0 bright
+#define NL_SUN_INTENSITY 5.0  // 0.5 weak ~ 5.0 bright
 #define NL_TORCH_INTENSITY 1.0  // 0.5 weak ~ 3.0 bright
 #define NL_NIGHT_BRIGHTNESS 0.1 // 0.0 dark ~ 2.0 bright
 #define NL_CAVE_BRIGHTNESS 0.1  // 0.0 dark ~ 2.0 bright
@@ -61,7 +61,7 @@
 /* Fog */
 #define NL_FOG_TYPE 2           // 0:no fog, 1:vanilla, 2:smoother vanilla, 3: exponential, 4: hyperbolic,5: parabolic	
 #define NL_RAIN_MIST_OPACITY 0.12 // [toggle] 0.04 very subtle ~ 0.5 thick rain mist blow
-
+#define NL_MIST_DENSITY 0.18
 /* DAWN TYPES and SETTINGS with SUNBLOOM TYPES */
 #define DAWN_TYPE 1 // 1;normal 2; gradient simple 3; gradient complex
 #define NL_DAWN_HORIZON_COL1 vec3(0.9, 0.3, 0.3) // Deep red-orange
@@ -106,13 +106,9 @@
 #define NL_WATER_WAVE             // [toggle] wave effect
 #define NL_WATER_FOG_FADE         // [toggle] fog fade for water
 #define NL_WATER_CLOUD_REFLECTION // [toggle] simple clouds/aurora reflection
-#define NL_WATER_TINT vec3(0.52,0.9,0.45)
+#define NL_WATER_TINT vec3(0.0,0.0,0.0)
 
 
-/*Moonlight*/
-//#define MOONLIGHT
-#define NL_MOONLIGHT_INTENSITY 9.0
-#define NL_MOONLIGHT_COLOR vec3(0.059, 0.102, 0.302)
 
 /* Underwater */
 #define NL_UNDERWATER_BRIGHTNESS 0.8         // 0.0 dark ~ 3.0 bright
@@ -137,9 +133,9 @@
 /* SHADOW EXTRAS */
 #define NL_SHADOW_EXTRA 0.4 // less makes shadows more dark and more ligjt shadows
 #define AO 2// 1;Basic , 2; Advanced
-#define AO_DARKENESS 0.2
+#define AO_DARKNESS 0.2
 /*JAVA FEATURES*/
-#define METALLIC //see fragment
+
 
 /* Vanilla cloud settings - make sure to remove clouds.png when using this */
 #define NL_CLOUD0_THICKNESS 2.1      // 0.5 slim ~ 8.0 fat
@@ -161,7 +157,8 @@
 #define NL_CLOUD2_SCALE 0.033        // 0.003 large ~ 0.3 tiny
 #define NL_CLOUD2_SHAPE 0.5          // 0.0 round ~ 1.0 box
 #define NL_CLOUD2_DENSITY 25.0       // 1.0 blurry ~ 100.0 sharp
-#define NL_CLOUD2_VELOCITY 0.8       // 0.0 static ~ 4.0 very fast
+#define NL_CLOUD2_VELOCIY 0.8 
+//#define NL_CLOUD2_VELOCIY      // 0.0 static ~ 4.0 very fast
 //#define NL_CLOUD2_MULTILAYER       // [toggle] extra cloud layer
 
 /* Aurora settings */

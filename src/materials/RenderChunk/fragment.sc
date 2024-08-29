@@ -9,6 +9,13 @@ SAMPLER2D_AUTOREG(s_LightMapTexture);
 
 uniform vec4 ViewPositionAndTime;
 uniform vec4 FogColor;
+#define DAY_CLOUD_COL vec3(1.0, 1.0, 1.0)
+#define DAY_CLOUD_SHADE_COL vec3(0.67, 0.72, 0.82)
+#define CLOUD_VARIATION 0.2
+#define SKY_COL vec3(0.52, 0.71, 0.91)
+#define HORIZON_COL  vec3(0.1, 0.9, 1.0)
+#define ZENITH_COL vec3(0.231, 0.353, 0.722)
+
 int getBlockID(const vec4 texCol) {
     bool iron     = 0.99 <= texCol.a && texCol.a < 1.00;
     bool gold     = 0.98 <= texCol.a && texCol.a < 0.99;
@@ -60,6 +67,55 @@ return clamp(clamp((shape-random)*step(hashS(
         floor(x+vec2(0,0.05))),.01),0.0,1.0)+tall,0.0,1.0);
         }
         
+float hash12(vec2 p) {
+    vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+}
+
+float hash13(vec3 p) {
+    p = fract(p * 0.1031);
+    p += dot(p, p.zyx + 31.32);
+    return fract((p.x + p.y) * p.z);
+}
+
+float render2DClouds(const vec2 poss, const float time) {
+    vec2 p = poss;
+    p.x += time * 0.9;
+    float body = hash12(floor(p));
+    body = (body > 0.8) ? 1.0 : 0.0;
+    return body;
+}
+
+vec2 renderThickClouds(const vec3 poss, const float time) {
+    const int steps = 12;
+    const float stepSize = 0.008;
+    float clouds = 0.0;
+    float cHeight = 1.3;
+    float drawSpace = smoothstep(0.0, 1.0, length(poss.xz / (poss.y * float(12))));
+    if (drawSpace < 1.0 && !bool(step(poss.y, 0.0))) {
+        for (int i = 0; i < steps; i++) {
+            float height = 1.0 + float(i) * stepSize;
+            vec2 cloudPos = poss.xz / poss.y * height;
+            cloudPos *= 2.5;
+            clouds += render2DClouds(cloudPos, time);
+            if (i == 0) {
+                cHeight = render2DClouds(cloudPos, time);
+            }
+        }
+        clouds = clouds > 0.0 ? 1.0 : 0.0;
+        clouds = mix(clouds, 0.0, drawSpace);
+    }
+    return vec2(clouds, cHeight);
+}
+
+// https://github.com/origin0110/OriginShader
+float getTime(const vec4 fogCol) {
+	return fogCol.g > 0.213101 ? 1.0 : 
+		dot(vec4(fogCol.g * fogCol.g * fogCol.g, fogCol.g * fogCol.g, fogCol.g, 1.0), 
+			vec4(349.305545, -159.858192, 30.557216, -1.628452));
+}
+
 void main() {
     vec4 diffuse;
     vec4 color;
@@ -124,38 +180,7 @@ vec3 glow = nlGlow(s_MatTexture, v_texcoord0, v_extra.a);
     lightTint = mix(lightTint.bbb, lightTint * lightTint, 0.35 + 0.65 * v_lightmapUV.y * v_lightmapUV.y * v_lightmapUV.y);
 
     color.rgb *= lightTint;
- #ifdef METALLIC
-   // Determine block type
-    int blockID = getBlockID(diffuse);
-    bool isMetallic = (blockID == 0 || blockID == 1 || blockID == 2); // iron, gold, copper
 
-    // Fake metallic effect start
-    vec3 zenithCol;
-    vec3 horizonCol;
-    vec3 horizonEdgeCol;
-    
-bool underWater = v_underwaterRainTime.x > 0.5;
-    float rainFactor = v_underwaterRainTime.y;
-    
-    if (underWater) {
-        vec3 fogcol = getUnderwaterCol(v_fog.rgb);
-        zenithCol = fogcol;
-        horizonCol = fogcol;
-        horizonEdgeCol = fogcol;
-    } else {
-        vec3 fs = getSkyFactors(v_fog.rgb);
-        zenithCol = getZenithCol(rainFactor, v_fog.rgb, fs);
-        horizonCol = getHorizonCol(rainFactor, v_fog.rgb, fs);
-        horizonEdgeCol = getHorizonEdgeCol(horizonCol, rainFactor, v_fog.rgb);
-    }
-
-    if (isMetallic) {
-        // Combine the zenith and horizon colors for a metallic shine
-        vec3 metallicShine = mix(zenithCol, horizonCol, 0.5) * 0.6;
-        diffuse.rgb += metallicShine * 0.5;
-    }
-    
-    #endif
     
     //AO component
     vec3 ncol_0 = normalize(v_color0.rgb);
@@ -163,7 +188,8 @@ bool underWater = v_underwaterRainTime.x > 0.5;
         diffuse = vec4(diffuse.rgb * mix(ncol_0.rgb, v_color0.rgb, 0.45), v_color0.a);
     }
     
-
+      float rainFactor = v_underwaterRainTime.y;
+  
      float mask = (1.0-1.0*rainFactor)*max(1.0 - 3.0*max(v_fog.b, v_fog.g), 0.0);
     #ifdef TRANSPARENT
         if (v_extra.b > 0.9) {
@@ -176,18 +202,27 @@ bool underWater = v_underwaterRainTime.x > 0.5;
    bool underWater = v_underwaterRainTime.x > 0.5;
     float vanillaAO = 0.0;
     //diffuse.rgb = v_rainDrops;
-
+float timee = getTime(v_fog);
     texCol.rgb = diffuse.rgb;
     diffuse.rgb *= color.rgb;
     diffuse.rgb += glow;
- vec3 stars += pow(vec3_splat(star(sPos.zx*2.0, v_underwaterRainTime.z))*1.0, vec3(16,7,5))*mask;
+ vec3 stars = pow(vec3_splat(star(sPos.zx*2.0, v_underwaterRainTime.z))*1.0, vec3(16,7,5))*mask;
  
+  vec2 uv = v_texcoord0;
+    vec3 poss = v_wpos;
+    vec2 clouds = renderThickClouds(poss, Time);
+    float variation = CLOUD_VARIATION * sin((uv.x + uv.x) * 0.1 + timee * 1.01);
+    float tVariation = step(uv.x, 0.5) * step(uv.y, 0.5) * CLOUD_VARIATION;
+    vec3 cloudColor = mix(DAY_CLOUD_SHADE_COL, DAY_CLOUD_COL, clouds.x + variation + tVariation);
+    vec3 skyColor = mix(ZENITH_COL, HORIZON_COL, uv.x);
+   /* vec4 cloudsrefl = vec4(mix(skyColor, cloudColor, clouds.x), 1.0);*/
 
     if (v_extra.b > 0.9) {
         diffuse.rgb += v_refl.rgb * v_refl.a;
         #ifdef STAR_REFL
         diffuse.rgb += stars;
         #endif
+        diffuse.rgb += cloudColor;
     } else if (v_refl.a > 0.0) {
         // Reflective effect - only on xz plane
         float dy = abs(dFdy(v_extra.g));
